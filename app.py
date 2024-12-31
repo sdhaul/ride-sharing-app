@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from marshmallow import ValidationError
+from marshmallow import Schema, fields, validate, ValidationError
 from backend.db import (
     create_driver, get_all_drivers, get_driver_by_id,
     update_driver_availability, delete_driver,
@@ -7,10 +7,39 @@ from backend.db import (
     create_ride, get_all_rides, update_ride_status, delete_ride,
     create_zone, get_all_zones, update_zone_demand_score, delete_zone
 )
-from schemas import DriverSchema, RiderSchema, RideSchema, ZoneSchema
 
 # Initialize Flask App
 app = Flask(__name__)
+
+# ------------------------
+# Marshmallow Schemas
+# ------------------------
+
+class DriverSchema(Schema):
+    name = fields.String(required=True, validate=validate.Length(min=1))
+    latitude = fields.Float(required=True)
+    longitude = fields.Float(required=True)
+    availability = fields.Boolean(required=False)
+    rating = fields.Float(required=False, validate=validate.Range(min=0.0, max=5.0))
+
+
+class RiderSchema(Schema):
+    name = fields.String(required=True, validate=validate.Length(min=1))
+    pickup_latitude = fields.Float(required=True)
+    pickup_longitude = fields.Float(required=True)
+    dropoff_latitude = fields.Float(required=True)
+    dropoff_longitude = fields.Float(required=True)
+
+class RideSchema(Schema):
+    driver_id = fields.String(required=True)
+    rider_id = fields.String(required=True)
+    status = fields.String(validate=validate.OneOf(["requested", "ongoing", "completed", "canceled"]))
+    fare = fields.Float(validate=validate.Range(min=0.0))
+
+class ZoneSchema(Schema):
+    region_name = fields.String(required=True, validate=validate.Length(min=1))
+    demand_score = fields.Float(validate=validate.Range(min=0.0))
+
 
 # ------------------------
 # Drivers Endpoints
@@ -50,18 +79,8 @@ def get_driver(driver_id):
 @app.route('/drivers/<driver_id>', methods=['PUT'])
 def update_driver(driver_id):
     data = request.json
-    try:
-        availability = data['availability']
-        if not isinstance(availability, bool):
-            raise ValidationError("Availability must be a boolean.")
-        
-        update_driver_availability(driver_id, availability)
-        return jsonify({"message": f"Driver {driver_id} updated"})
-    
-    except KeyError:
-        return jsonify({"error": "Missing 'availability' field"}), 400
-    except ValidationError as err:
-        return jsonify({"error": err.messages}), 400
+    update_driver_availability(driver_id, data['availability'])
+    return jsonify({"message": f"Driver {driver_id} updated"})
 
 @app.route('/drivers/<driver_id>', methods=['DELETE'])
 def delete_driver_endpoint(driver_id):
@@ -69,7 +88,7 @@ def delete_driver_endpoint(driver_id):
     return jsonify({"message": f"Driver {driver_id} deleted"})
 
 # ------------------------
-# Riders Endpoints
+# Riders Endpoints (No Validation Yet)
 # ------------------------
 
 @app.route('/riders', methods=['POST'])
@@ -77,13 +96,11 @@ def add_rider():
     data = request.json
     schema = RiderSchema()
     
-    # Validate input
     try:
         validated_data = schema.load(data)
     except ValidationError as err:
         return jsonify({"error": err.messages}), 400
 
-    # Create rider using validated data
     rider_id = create_rider(
         validated_data['name'],
         validated_data['pickup_latitude'],
@@ -112,8 +129,6 @@ def update_rider(rider_id):
     
     except KeyError:
         return jsonify({"error": "Missing 'new_name' field"}), 400
-    except ValidationError as err:
-        return jsonify({"error": err.messages}), 400
 
 @app.route('/riders/<rider_id>', methods=['DELETE'])
 def delete_rider_endpoint(rider_id):
@@ -121,7 +136,7 @@ def delete_rider_endpoint(rider_id):
     return jsonify({"message": f"Rider {rider_id} deleted"})
 
 # ------------------------
-# Rides Endpoints
+# Rides Endpoints (No Validation Yet)
 # ------------------------
 
 @app.route('/rides', methods=['POST'])
@@ -129,13 +144,11 @@ def add_ride():
     data = request.json
     schema = RideSchema()
     
-    # Validate input
     try:
         validated_data = schema.load(data)
     except ValidationError as err:
         return jsonify({"error": err.messages}), 400
 
-    # Create ride using validated data
     ride_id = create_ride(
         validated_data['driver_id'],
         validated_data['rider_id'],
@@ -164,8 +177,6 @@ def update_ride(ride_id):
     
     except KeyError:
         return jsonify({"error": "Missing 'status' field"}), 400
-    except ValidationError as err:
-        return jsonify({"error": err.messages}), 400
 
 @app.route('/rides/<ride_id>', methods=['DELETE'])
 def delete_ride_endpoint(ride_id):
@@ -173,14 +184,14 @@ def delete_ride_endpoint(ride_id):
     return jsonify({"message": f"Ride {ride_id} deleted"})
 
 # ------------------------
-# Zones Endpoints
+# Zones Endpoints (No Validation Yet)
 # ------------------------
 
 @app.route('/zones', methods=['POST'])
 def add_zone():
     data = request.json
     schema = ZoneSchema()
-    
+
     # Validate input
     try:
         validated_data = schema.load(data)
@@ -192,7 +203,6 @@ def add_zone():
         validated_data['region_name'],
         validated_data.get('demand_score', 0.0)
     )
-    
     return jsonify({"zone_id": zone_id})
 
 @app.route('/zones', methods=['GET'])
@@ -203,6 +213,7 @@ def list_zones():
 @app.route('/zones/<zone_id>', methods=['PUT'])
 def update_zone(zone_id):
     data = request.json
+
     try:
         demand_score = data['demand_score']
         
@@ -214,3 +225,11 @@ def update_zone(zone_id):
     
     except KeyError:
         return jsonify({"error": "Missing 'demand_score' field"}), 400
+
+@app.route('/zones/<zone_id>', methods=['DELETE'])
+def delete_zone_endpoint(zone_id):
+    delete_zone(zone_id)
+    return jsonify({"message": f"Zone {zone_id} deleted"})
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -68,12 +68,22 @@ def get_driver_by_id(driver_id):
         cursor = connection.cursor()
         query = "SELECT driver_id, name, ST_AsText(location), availability, rating FROM Drivers WHERE driver_id = %s;"
         cursor.execute(query, (driver_id,))
-        driver = cursor.fetchone()
-        print(driver)
-        return driver
+        result = cursor.fetchone()
+        if result:
+            # Convert the result tuple to a dictionary
+            driver = {
+                "driver_id": result[0],
+                "name": result[1],
+                "location": result[2],
+                "availability": result[3],
+                "rating": result[4]
+            }
+            print(driver)
+            return driver
+        else:
+            return None
     except Exception as e:
         print(f"Error fetching driver by ID: {e}")
-
 
 # Update
 def update_driver_availability(driver_id, availability):

@@ -74,6 +74,8 @@ def list_drivers():
 @app.route('/drivers/<driver_id>', methods=['GET'])
 def get_driver(driver_id):
     driver = get_driver_by_id(driver_id)
+    if not driver:
+        return jsonify({"error": "Driver not found"}), 404
     return jsonify(driver)
 
 @app.route('/drivers/<driver_id>', methods=['PUT'])

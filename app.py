@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from marshmallow import Schema, fields, validate, ValidationError
+from flask_cors import CORS
+
 from backend.db import (
     create_driver, get_all_drivers, get_driver_by_id,
     update_driver_availability, delete_driver,
@@ -10,6 +12,7 @@ from backend.db import (
 
 # Initialize Flask App
 app = Flask(__name__)
+CORS(app)
 
 # ------------------------
 # Marshmallow Schemas

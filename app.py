@@ -12,7 +12,7 @@ from backend.db import (
 
 # Initialize Flask App
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # ------------------------
 # Marshmallow Schemas
@@ -93,7 +93,7 @@ def delete_driver_endpoint(driver_id):
     return jsonify({"message": f"Driver {driver_id} deleted"})
 
 # ------------------------
-# Riders Endpoints (No Validation Yet)
+# Riders Endpoints 
 # ------------------------
 
 @app.route('/riders', methods=['POST'])
@@ -141,7 +141,7 @@ def delete_rider_endpoint(rider_id):
     return jsonify({"message": f"Rider {rider_id} deleted"})
 
 # ------------------------
-# Rides Endpoints (No Validation Yet)
+# Rides Endpoints 
 # ------------------------
 
 @app.route('/rides', methods=['POST'])
@@ -189,7 +189,7 @@ def delete_ride_endpoint(ride_id):
     return jsonify({"message": f"Ride {ride_id} deleted"})
 
 # ------------------------
-# Zones Endpoints (No Validation Yet)
+# Zones Endpoints
 # ------------------------
 
 @app.route('/zones', methods=['POST'])

@@ -12,8 +12,7 @@ from backend.db import (
 
 # Initialize Flask App
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-
+CORS(app)
 # ------------------------
 # Marshmallow Schemas
 # ------------------------

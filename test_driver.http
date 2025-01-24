@@ -1,1 +1,10 @@
-GET http://127.0.0.1:5000/zones
+POST http://127.0.0.1:5000/drivers
+Content-Type: application/json
+
+{
+  "name": "Shardul",
+  "latitude": 37.621688771419244,
+  "longitude": -122.45510556640625,
+  "availability": true,
+  "rating": 5
+}

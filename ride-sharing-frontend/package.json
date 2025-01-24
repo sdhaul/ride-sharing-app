@@ -6,6 +6,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.1",
+    "@react-google-maps/api": "^2.20.5",
     "@react-three/fiber": "^8.17.10",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
@@ -16,6 +17,7 @@
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.5",
     "three": "^0.172.0",
+    "uuid": "^11.0.5",
     "web-vitals": "^4.2.4"
   },
   "scripts": {

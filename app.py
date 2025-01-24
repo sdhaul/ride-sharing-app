@@ -50,6 +50,8 @@ class ZoneSchema(Schema):
 @app.route('/drivers', methods=['POST'])
 def add_driver():
     data = request.json
+    print("Incoming data:", data)  # Log the incoming data for debugging
+
     schema = DriverSchema()
     
     # Validate input
@@ -71,6 +73,7 @@ def add_driver():
 @app.route('/drivers', methods=['GET'])
 def list_drivers():
     drivers = get_all_drivers()
+    print("All Drivers:", drivers)
     return jsonify(drivers)
 
 @app.route('/drivers/<driver_id>', methods=['GET'])

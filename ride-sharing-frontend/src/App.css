@@ -42,7 +42,7 @@
 
 /* Light Mode Gradient Background */
 .light-mode {
-  background: linear-gradient(to bottom, #3b5360, #ffffff);
+  background: linear-gradient(to bottom, #8cb0b9, #ffffff);
   color: #000000;
   transition: background-color 0.5s ease, color 0.5s ease;
 }

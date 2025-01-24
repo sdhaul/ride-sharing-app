@@ -1,3 +1,4 @@
+/* Existing styles */
 .App {
   text-align: center;
 }
@@ -35,4 +36,79 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* New styles for Drivers Component */
+
+/* Light Mode Gradient Background */
+.light-mode {
+  background: linear-gradient(to bottom, #3b5360, #ffffff);
+  color: #000000;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Dark Mode Gradient Background */
+.dark-mode {
+  background: linear-gradient(to bottom, #000428, #004e92, #6a0572);
+  color: #ffffff;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Drivers List Grid */
+.drivers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* Card Styling */
+.driver-card {
+  background-color: #ffffff; /* Default for light mode */
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+
+.dark-mode .driver-card {
+  background-color: #333333; /* Dark mode card */
+}
+
+/* Typography inside Cards */
+.driver-card h6 {
+  font-size: 1.25rem;
+}
+
+.driver-card p {
+  margin: 0.5rem auto;
+}
+
+/* Buttons inside Cards */
+.driver-card button {
+  margin-right: 0.5rem;
+}
+
+/* Smooth Transitions for Rows */
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+}
+
+/* Form Styling */
+.driver-form input,
+.driver-form label,
+.driver-form button {
+  margin-top: .5rem
+}
+
+.driver-form input,
+.driver-form label{
+padding:.75 rem
 }

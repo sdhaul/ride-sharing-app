@@ -179,7 +179,7 @@ const Drivers = () => {
       <Typography variant="h5" sx={{ marginTop: "2rem" }}>Drivers List</Typography>
       <Grid container spacing={2} className="drivers-grid">
         {drivers.map((driver) => (
-          <Grid item xs={12} sm={6} md={4} key={driver.id}>
+          <Grid item xs={12} sm={7} md={4} key={driver.id}>
             <Card className="driver-card">
               <CardContent>
                 <Typography variant="h6">{driver.name}</Typography>
